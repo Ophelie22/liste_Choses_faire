@@ -72,7 +72,49 @@ let handler = {
      */
     handleAddTaskFormSubmit: function(event) {
         event.preventDefault();
-        console.log('form submitted!');
+        //console.log('form submitted!');
+
+        // get information from the form
+        let name = event.currentTarget.querySelector('input.task__name-edit').value;
+        let category = event.currentTarget.querySelector('.task__category select').value;
+        //console.log(name, category);
+
+         // get the template for a task
+        let template = document.getElementById('template-task');
+
+        // clone the content of the template
+        let newTask = template.content.cloneNode(true);
+
+        // modify the clone with information from the form
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset
+        let taskElement = newTask.querySelector('.task');
+
+        // data-category(recup de la div)
+        taskElement.dataset.category = category;
+
+        // name of the task
+        taskElement.querySelector('.task__name-display').textContent = name;
+
+         // value of the input
+        taskElement.querySelector('.task__name-edit').value = name;
+
+        // display the category
+        taskElement.querySelector('.task__category p').textContent = category;
+
+        // add the clone to the DOM
+        // ----- add the clone to the DOM, before the form
+        // https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore
+        let parentNode = document.querySelector('.tasks');
+        let brother = parentNode.querySelector('.task--add');
+         parentNode.insertBefore(newTask, brother);
+         
+        // bind events for the new task
+        app.bindEventsForTask(taskElement);
+        
+        // clear the form
+      event.currentTarget.querySelector('input.task__name-edit').value = '';
+      event.currentTarget.querySelector('.task__category select').value = 'Choisir une catégorie';
     }
+    
 }; 
 
