@@ -53,7 +53,17 @@ let handler = {
      * @param {*} event 
      */
     handleCompleteButtonClick: function(event) {
-        console.log('button clicked!');
+        //console.log('button clicked!');
+        let button = event.currentTarget;
+        let taskToModify = button.closest('.task');
+
+        // remove class task--todo and add class task--complete
+        taskToModify.classList.remove('task--todo');
+        taskToModify.classList.add('task--complete');
+
+        // progress bar to 100%
+        let progressBar = taskToModify.querySelector('.progress-bar__level');
+        progressBar.style.width = '100%';
     }
 }; 
 
