@@ -4,7 +4,17 @@ let app = {
      */
     init: function() {
         console.log("init");
- // mise en place des écouteurs d'événements
+        // mise en place des écouteurs d'événements
+        app.bindEvents();
+    },
+
+    /**
+     * Bind events Listeners
+     * 
+     */
+    bindEvents:function(){
+
+    
         // écouter le clic sur les titres des tâches
 
         // 1 - repérer tous les titres de tâches (sauf celle du formulaire et
