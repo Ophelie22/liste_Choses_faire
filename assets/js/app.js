@@ -19,18 +19,15 @@ let app = {
         }
         // 3- On va mettre en place notre function handler (fichiers handler.js)
 
-        // écouter l'événement blur sur les inputs (lorsque je cliquerai a l'exterieur de mon titre, pour q l'edition soit
+        // écouter l'événement blur et les keydowns (touche clavier)sur les inputs (lorsque je cliquerai a l'exterieur de mon titre, pour q l'edition soit
         //prise en compte)
         let inputElements = document.querySelectorAll(".tasks .task .task__name-edit");
         //console.log(inputElements);
         for (let i = 0; i < inputElements.length; i++) {
             let element = inputElements[i];
             element.addEventListener('blur', handler.handleTaskTitle);
-        }
-         // écouter l'événement keydown sur les inputs(lorq'on presse par exemple notre touche entrée)
-        for (let i = 0; i < inputElements.length; i++) {
-            let element = inputElements[i];
             element.addEventListener('keydown', handler.handleTaskTitleEnterKey);
+       
         }
     },
 };
