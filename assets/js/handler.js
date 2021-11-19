@@ -18,4 +18,19 @@ let handler = {
         // ajouter la classe "task--edit"
         taskToModify.classList.add('task--edit');
     },
+
+
+    handleTaskTitle: function(event) {
+      //console.log('handleTaskTitle');
+    },
+    handleTaskTitleEnterKey: function(event) {
+     //console.log(event.key);
+      // si la touche est Entrée
+      if (event.key === 'Enter') {
+             console.log('Touche entrée appuyée !')
+            handler.handleTaskTitle(event);
+      }
+    }
+
 };
+
