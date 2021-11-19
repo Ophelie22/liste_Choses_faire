@@ -46,7 +46,14 @@ let handler = {
              //console.log('Touche entrée appuyée !')
             handler.handleTaskTitle(event);
       }
-    }
+    },
 
-};
+    /**
+     * Handle a click on the button to make the task complete
+     * @param {*} event 
+     */
+    handleCompleteButtonClick: function(event) {
+        console.log('button clicked!');
+    }
+}; 
 

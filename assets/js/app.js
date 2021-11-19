@@ -7,39 +7,33 @@ let app = {
         // mise en place des écouteurs d'événements
         app.bindEvents();
     },
-
     /**
-     * Bind events Listeners
-     * 
+     * Bind event listeners
      */
-    bindEvents:function(){
-
-    
-        // écouter le clic sur les titres des tâches
-
-        // 1 - repérer tous les titres de tâches (sauf celle du formulaire et
-        // celles qui sont archivées, avec le maximum de precision ds le selecteur CSS)
-        let titleElements = document.querySelectorAll(".tasks .task:not(.task--archive):not(.task--add) .task__name-display");
-
-        // 2 - On va placer notre écouteur d'evenements sur chacun donc on va faire une boucle
-        for (let i = 0; i < titleElements.length; i++) {
-            let element = titleElements[i];
-            // J'ajoute l'ecouteur de click sur le titre
-            element.addEventListener('click', handler.handleClickOnTaskTitle);
-        }
-        // 3- On va mettre en place notre function handler (fichiers handler.js)
-
-        // écouter l'événement blur et les keydowns (touche clavier)sur les inputs (lorsque je cliquerai a l'exterieur de mon titre, pour q l'edition soit
-        //prise en compte)
-        let inputElements = document.querySelectorAll(".tasks .task .task__name-edit");
-        //console.log(inputElements);
-        for (let i = 0; i < inputElements.length; i++) {
-            let element = inputElements[i];
-            element.addEventListener('blur', handler.handleTaskTitle);
-            element.addEventListener('keydown', handler.handleTaskTitleEnterKey);
-       
+    bindEvents: function() {
+        // loop on tasks
+        let tasks = document.querySelectorAll(".tasks .task:not(.task--archive):not(.task--add)");
+        for (let i = 0; i < tasks.length; i++) {
+            let task = tasks[i];
+            app.bindEventsForTask(task);
         }
     },
+    /**
+     * Bind events for a task
+     */
+    bindEventsForTask: function(task) {
+        // event listener for a click on the title
+        let title = task.querySelector('.task__name-display');
+        title.addEventListener('click', handler.handleClickOnTaskTitle);
+        // event listener for blur and keydown on the input
+        let input = task.querySelector('.task__name-edit');
+        input.addEventListener('blur', handler.handleTaskTitle);
+        input.addEventListener('keydown', handler.handleTaskTitleEnterKey);
+
+        // event listener for a click on the validate button
+        let validateButton = task.querySelector('.task__button--validate');
+        validateButton.addEventListener('click', handler.handleCompleteButtonClick);
+    }
 };
 
 // si on exécutait tout de suite init, on risquerait que le DOM ne soit pas encore
