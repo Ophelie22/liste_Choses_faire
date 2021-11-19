@@ -64,6 +64,15 @@ let handler = {
         // progress bar to 100%
         let progressBar = taskToModify.querySelector('.progress-bar__level');
         progressBar.style.width = '100%';
+    },
+    
+   /**
+     * Handle submit event on the form to add a task
+     * @param {*} event 
+     */
+    handleAddTaskFormSubmit: function(event) {
+        event.preventDefault();
+        console.log('form submitted!');
     }
 }; 
 
