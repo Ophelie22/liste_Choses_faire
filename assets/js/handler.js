@@ -19,15 +19,31 @@ let handler = {
         taskToModify.classList.add('task--edit');
     },
 
-
+    /**
+     * Traite un événement lié à un input en mettant à jour le titre de la tâche
+     * @param {*} event 
+     */
     handleTaskTitle: function(event) {
       //console.log('handleTaskTitle');
+
+     // on récupère le nouveau titre
+      let inputElement = event.currentTarget;
+      let newTitle = inputElement.value;
+
+      // on met à jour le titre ( notre balise p)
+        // on cible le p : frère aîné de l'input qui a déclenché l'événement
+        let titleElement = inputElement.previousElementSibling;
+        titleElement.textContent = newTitle;
+        // on enlève le mode d'édition sur la tâche
+        let taskToModify = inputElement.closest('.task');
+          // supprimer la classe "task--edit"
+        taskToModify.classList.remove('task--edit');
     },
     handleTaskTitleEnterKey: function(event) {
      //console.log(event.key);
       // si la touche est Entrée
       if (event.key === 'Enter') {
-             console.log('Touche entrée appuyée !')
+             //console.log('Touche entrée appuyée !')
             handler.handleTaskTitle(event);
       }
     }
