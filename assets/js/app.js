@@ -6,6 +6,9 @@ let app = {
         console.log("init");
         // mise en place des écouteurs d'événements
         app.bindEvents();
+
+         // chargement des catégories
+        categoryManager.loadCategories();
     },
     /**
      * Bind event listeners
@@ -15,7 +18,7 @@ let app = {
         let tasks = document.querySelectorAll(".tasks .task:not(.task--archive):not(.task--add)");
         for (let i = 0; i < tasks.length; i++) {
             let task = tasks[i];
-            
+
             app.bindEventsForTask(task);
         }
         // listen for submit event on form to add a task

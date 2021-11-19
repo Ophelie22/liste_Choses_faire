@@ -103,3 +103,77 @@ Lorsque la fonctionnalité est terminée, une _Pull Request_, avec 3 à 4 review
 ## Documentation
 
 La documentation technique devra être rédigée **en anglais**.
+
+Objectif
+on veut pouvoir archiver une tâche
+on veut pouvoir voir toutes les archives
+on veut pouvoir supprimer une tâche
+Etapes
+#1 Archiver une tâche
+dans le code côté frontend
+si ce n'est pas déjà fait
+écouter l'event "click" sur le bouton rouge
+y affecter une méthode du module app
+dans cette méthode "handler"
+récupérer l'élément "bouton rouge" sur lequel le click vient d'avoir lieu
+récupérer l'id de la tâche (voir pour tâche complétée)
+lancer une requête HTTP sur le bon Endpoint
+fournir toutes les données demandées
+selon le HTTP Status Code de la réponse
+afficher un message de succès + ajuster l'affichage de la tâche dans la page
+ou afficher un message d'erreur
+#2 Voir toutes les archives 1/2
+Il est grand temps de gérer l'affichage des tâches archivées !
+En base, les tâches archivées ont un status égal à 0 ; les tâches activées un status égal à 1.
+
+si ce n'est pas déjà le cas, modifier la requête de création d'une tâche pour envoyer un statut correct (une tâche créée via le front doit être automatiquement activée) — retoucher l'API si nécessaire
+pour l'affichage des tâches activées vs archivées, on n'a pas besoin de toucher l'API
+dans le code côté frontend, chaque tâche archivée est bien ajoutée dans le DOM au chargement de la page
+mais il faut les afficher un peu différement des autres (classe .todo--archive réalisant un display: none)
+donc quand on récupère les tâches initiales, il faut parcourir toutes les tâches
+pour chaque tâche
+si elle est archivée
+alors on la masque
+sinon
+alors on l'affiche
+au clic sur le lien Voir les archives, inverser cette logique d'affichage
+#3 Voir toutes les archives 2/2
+Une fois toutes les archives affichées, comment revenir à l'affichage initiale (tâches actives uniquement) ?
+
+déclarer une propriété "displayArchives" dans app et l'initialiser à false
+suite au click sur "Voir les archives"
+changer le texte dans ce lien en "Voir les tâches actives"
+modifier la propriété "displayArchives"
+à true si elle était à false
+à false si elle était à true
+en gros, on inverse la valeur booléenne !
+modifier le code du handler de l'étape 2, pour
+qu'il affiche les archives si app.displayArchives est true
+qu'il affiche les tâches actives si app.displayArchives est false
+#4 Endpoint /tasks/[id] en DELETE
+mettre en place la route et la méthode de Controller
+attention à configurer la bonne méthode HTTP 😉
+on n'a pas besoin d'une View car on ne génère pas du code HTML
+dans la méthode,
+récupérer la tâche demandée (son id est fourni en argument de la méthode de Controller)
+si elle existe
+appeler la bonne méthode de l'objet Task pour la supprimer de la BDD
+si la suppression a fonctionné
+alors retourner un code de réponse HTTP 204 "(No Content)"
+https://restfulapi.net/http-methods/#put
+sans body (pas de JSON ni d'HTML)
+sinon
+alors retourner un code de réponse HTTP 500 "Internal Server Error"
+https://restfulapi.net/http-status-codes/
+sans body (pas de JSON ni d'HTML)
+sinon
+alors retourner un code de réponse HTTP 404 "Not Found"
+https://restfulapi.net/http-status-codes/
+sans body (pas de JSON ni d'HTML)
+tester les différents cas de figure avec Insomnia
+#5 Supprimer une tâche
+bon, là, faut-il encore décrire les étapes ?
+il y a un "bouton rouge" (différent de celui pour archiver)
+au click sur ce bouton…
+ben hop, requête HTTP sur le Endpoint de l'étape précédente
+et selon la réponse, on affiche un message de succès ou d'erreur + mise-à-jour de la page 👍
