@@ -28,15 +28,21 @@ let categoryManager = {
         
           console.log(data); // contenu de la réponse sous forme d'objet JS
 
-          categoryManager.addOptionsToSelect(data);
+          let headerSelect = document.getElementById('header-select-category');
+          categoryManager.addOptionsToSelect(data, headerSelect);
+
+          let formAddSelect = document.getElementById('form-add-select-category');
+          categoryManager.addOptionsToSelect(data, formAddSelect);
             }
         ); 
     },
     /**
      * Add options to a select item
+     * @param categoriesArray Categories to add as options
+     * @param selectElement Select element into which add the options
      */
     //(categieArray je met le nom que je veux, j'ai besoin d'un tableau par rapport a data)
-    addOptionsToSelect: function(categoriesArray) {
+    addOptionsToSelect: function(categoriesArray, selectElement) {
         // https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Instructions/for...of
         for (const currentCategory of categoriesArray) {
             // console.log(currentCategory);
@@ -47,7 +53,7 @@ let categoryManager = {
             optionElement.value = currentCategory.id;
 
             // add option to the select
-            document.getElementById('header-select-category').appendChild(optionElement);
+            selectElement.appendChild(optionElement);
         }
     },
 } 
