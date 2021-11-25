@@ -64,4 +64,14 @@ let categoryManager = {
             selectElement.appendChild(optionElement);
         }
     },
+    /**
+     * Get the name of a category from its id
+     * @param categoryId 
+     */
+    getCategoryName(categoryId) {
+        // get the element with index categoryId
+        let category = categoryManager.categories[categoryId];
+        return category.name;
+    }
 } 
+ 
