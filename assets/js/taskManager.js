@@ -6,9 +6,10 @@ let taskManager = {
      * Add a task to the DOM, using a template
      * @param name Name of the task to add
      * @param categoryId Id of the category of the task to add
-     * TODO gérer le pourcentage de complétion, la classe task--complete, l'archivage
+     * @param status Status of the task
+     * @param completion Percent of completion
      */
-    addTask: function(name, categoryId) {
+    addTask: function(name, categoryId ,status = 1, completion = 0, taskId = null) {
         // get the template for a task
         let template = document.getElementById('template-task');
 
@@ -34,6 +35,23 @@ let taskManager = {
         // display the category
         taskElement.querySelector('.task__category p').textContent = categoryName;
 
+        // completion
+        taskElement.querySelector('.progress-bar__level').style.width = completion + '%';
+
+        // CSS class from status
+        if (completion === 100) {
+            taskElement.classList.remove('task--todo');
+            taskElement.classList.add('task--complete');
+        }
+        if (status === 0) {
+            // tâche archivée
+            taskElement.classList.remove('task--todo');
+            taskElement.classList.add('task--archive');
+        }
+
+        // dataset id
+        taskElement.dataset.id = taskId;
+
         // ----- add the clone to the DOM, before the form
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore
         let parentNode = document.querySelector('.tasks');
@@ -42,5 +60,38 @@ let taskManager = {
 
         // bind events for the new task
         app.bindEventsForTask(taskElement);
-    }
-} 
+   },
+
+    /**
+     * Load all tasks from the API
+     */
+    loadTasks: function() {
+        console.log('load tasks');
+
+        // On prépare la configuration de la requête HTTP
+        let config = {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache'
+        };
+
+        // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
+        fetch('https://benoclock.github.io/S07-todolist/tasks.json', config)
+            // Ensuite, lorsqu'on reçoit la réponse au format JSON
+            .then(function(response) {
+                // console.log(response); // réponse entière (headers + contenu)
+                // On convertit cette réponse en un objet JS et on le retourne
+                return response.json();
+            })
+            // Ce résultat au format JS est récupéré en argument ici-même
+            .then(function(data) {
+                // On dispose désormais d'un tableau JS exploitable dans la variable data
+                console.log(data); // contenu de la réponse sous forme d'objet JS
+
+                for (task of data) {
+                    taskManager.addTask(task.title, task.category.id, task.status, task.completion);
+                }
+            }
+        );
+    },
+  }

@@ -39,11 +39,17 @@ let categoryManager = {
                 categoryManager.categories[category.id] = category;
                 }
                 //console.log(categoryManager.categories);
+             
+                // chargement des tâches : on lance le chargement des tâches
+                // seulement après avoir reçu la réponse pour les catégories : 
+                // rien ne garantit qu'on va recevoir les réponses dans l'ordre
+                // où on a envoyé les requêtes
+                taskManager.loadTasks();
+            }
+        );
+    },
             
-            
-        }
-     ); 
-},
+   
     /**
      * Add options to a select item
      * @param categoriesArray Categories to add as options
