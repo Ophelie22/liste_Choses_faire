@@ -8,7 +8,7 @@ let handler = {
      */
     handleClickOnTaskTitle: function(event) {
         // traitement
-         console.log('handleClickOnTaskTitle', event.currentTarget);
+         //console.log('handleClickOnTaskTitle', event.currentTarget);
         let element = event.currentTarget;
 
         // récupérer le parent le plus proche qui a la classe task

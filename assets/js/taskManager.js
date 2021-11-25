@@ -89,7 +89,7 @@ let taskManager = {
                 console.log(data); // contenu de la réponse sous forme d'objet JS
 
                 for (task of data) {
-                    taskManager.addTask(task.title, task.category.id, task.status, task.completion);
+                    taskManager.addTask(task.title, task.category.id, task.status, task.completion, task.id);
                 }
             }
         );
