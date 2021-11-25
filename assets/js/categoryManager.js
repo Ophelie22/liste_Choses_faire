@@ -26,7 +26,6 @@ let categoryManager = {
         // Ce résultat au format JS est récupéré en argument ici-même
         .then(function(data) {
         // On dispose désormais d'un tableau JS exploitable dans la variable data
-        
           //console.log(data); // contenu de la réponse sous forme d'objet JS
 
           let headerSelect = document.getElementById('header-select-category');
@@ -39,7 +38,7 @@ let categoryManager = {
             for (category of data) {
                 categoryManager.categories[category.id] = category;
                 }
-                console.log(categoryManager.categories);
+                //console.log(categoryManager.categories);
             
             
         }

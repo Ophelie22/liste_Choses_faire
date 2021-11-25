@@ -20,7 +20,7 @@ let taskManager = {
         let taskElement = newTask.querySelector('.task');
 
         // data-category
-        taskElement.dataset.category = category;
+        taskElement.dataset.category = categoryId;
 
         // name of the task
         taskElement.querySelector('.task__name-display').textContent = name;
@@ -29,7 +29,7 @@ let taskManager = {
         taskElement.querySelector('.task__name-edit').value = name;
 
         // get the name of the category from the category id
-        let categoryName = xxxxx;
+        let categoryName = categoryManager.getCategoryName(categoryId);
 
         // display the category
         taskElement.querySelector('.task__category p').textContent = categoryName;
