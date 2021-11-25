@@ -65,7 +65,15 @@ let handler = {
         let progressBar = taskToModify.querySelector('.progress-bar__level');
         progressBar.style.width = '100%';
     },
-    
+    /*
+    Objectif : charger les tâches depuis l'API
+    - mutualiser le code d'ajout d'une tâche avec le formulaire
+    - en profiter pour réparer le formulaire (select avec value)
+    => il me faut une fonction getNameOfCategory(categoryId)
+    => il faut que je stocke les catégories quand j'ai la réponse de l'API
+    - faire appel à l'API et traiter la réponse
+    */
+
    /**
      * Handle submit event on the form to add a task
      * @param {*} event 
@@ -79,37 +87,50 @@ let handler = {
         let category = event.currentTarget.querySelector('.task__category select').value;
         //console.log(name, category);
 
+/*
+        si je veux isoler un morceau de code dans une fonction pour l'utiliser à
+        plusieurs endroits :
+        1- repérer où commence et où finit le morceau de code
+        2- trouver un nom pour ce morceau de code (quelle action il fait) => nom
+        de la fonction
+        3- repérer les différences => en déduire les paramètres de la fonction
+        4- utiliser la fonction, vérifier qu'il n'y a pas de bug
+        */
+
+        taskManager.addTask(name, category);
+
+
          // get the template for a task
-        let template = document.getElementById('template-task');
+        //let template = document.getElementById('template-task');
 
         // clone the content of the template
-        let newTask = template.content.cloneNode(true);
+        // let newTask = template.content.cloneNode(true);
 
         // modify the clone with information from the form
         // https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset
-        let taskElement = newTask.querySelector('.task');
+        // let taskElement = newTask.querySelector('.task');
 
         // data-category(recup de la div)
-        taskElement.dataset.category = category;
+        // taskElement.dataset.category = category;
 
         // name of the task
-        taskElement.querySelector('.task__name-display').textContent = name;
+        // taskElement.querySelector('.task__name-display').textContent = name;
 
          // value of the input
-        taskElement.querySelector('.task__name-edit').value = name;
+        // taskElement.querySelector('.task__name-edit').value = name;
 
         // display the category
-        taskElement.querySelector('.task__category p').textContent = category;
+        // taskElement.querySelector('.task__category p').textContent = category;
 
         // add the clone to the DOM
         // ----- add the clone to the DOM, before the form
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore
-        let parentNode = document.querySelector('.tasks');
-        let brother = parentNode.querySelector('.task--add');
-         parentNode.insertBefore(newTask, brother);
+        // let parentNode = document.querySelector('.tasks');
+        // let brother = parentNode.querySelector('.task--add');
+        //  parentNode.insertBefore(newTask, brother);
          
         // bind events for the new task
-        app.bindEventsForTask(taskElement);
+        // app.bindEventsForTask(taskElement);
         
         // clear the form
       event.currentTarget.querySelector('input.task__name-edit').value = '';

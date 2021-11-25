@@ -2,6 +2,7 @@
  * Manage the categories
  */
 let categoryManager = {
+        categories: [],
     /**
      * Load all categories from the API
      */
@@ -26,16 +27,24 @@ let categoryManager = {
         .then(function(data) {
         // On dispose désormais d'un tableau JS exploitable dans la variable data
         
-          console.log(data); // contenu de la réponse sous forme d'objet JS
+          //console.log(data); // contenu de la réponse sous forme d'objet JS
 
           let headerSelect = document.getElementById('header-select-category');
           categoryManager.addOptionsToSelect(data, headerSelect);
 
           let formAddSelect = document.getElementById('form-add-select-category');
           categoryManager.addOptionsToSelect(data, formAddSelect);
-            }
-        ); 
-    },
+            
+        // we store the categories to use them later
+            for (category of data) {
+                categoryManager.categories[category.id] = category;
+                }
+                console.log(categoryManager.categories);
+            
+            
+        }
+     ); 
+},
     /**
      * Add options to a select item
      * @param categoriesArray Categories to add as options
