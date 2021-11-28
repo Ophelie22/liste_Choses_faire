@@ -16,7 +16,8 @@ let categoryManager = {
             cache: 'no-cache'
       };
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-    fetch('https://benoclock.github.io/S07-todolist/categories.json', config)
+    //fetch('https://benoclock.github.io/S07-todolist/categories.json', config)
+    fetch('htpp://localhost:8080/categories, config')
             // Ensuite, lorsqu'on reçoit la réponse au format JSON
         .then(function(response) {
                 // console.log(response); // réponse entière (headers + contenu)

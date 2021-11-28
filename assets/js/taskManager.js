@@ -76,7 +76,8 @@ let taskManager = {
         };
 
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch('https://benoclock.github.io/S07-todolist/tasks.json', config)
+        //fetch('https://benoclock.github.io/S07-todolist/tasks.json', config)
+        fetch('htpp://localhost:8080/tasks, config')
             // Ensuite, lorsqu'on reçoit la réponse au format JSON
             .then(function(response) {
                 // console.log(response); // réponse entière (headers + contenu)
