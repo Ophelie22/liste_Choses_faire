@@ -1,97 +1,91 @@
-/**
- * Manage tasks
- */
-let taskManager = {
-    /**
-     * Add a task to the DOM, using a template
-     * @param name Name of the task to add
-     * @param categoryId Id of the category of the task to add
-     * @param status Status of the task
-     * @param completion Percent of completion
-     */
-    addTask: function(name, categoryId, status = 1, completion = 0, taskId = null) {
-        // get the template for a task
-        let template = document.getElementById('template-task');
+//console.log('%c' + 'taskManager.js loaded', 'color: #b0f; font-size: 1rem; background-color:#fff');
+let task = {
+  tasks: null,
+  init: function() {
+  },
+  load: function() {
+    let fetch = apiClient.loadTasks();
+    fetch.then(task.displayTasks);
+    return fetch;
+    // return apiClient.loadTasks().then(task.displayTasks);
+  },
+  // this method will register the event handlers on a task DOM element
+  makeInteractive: function(task) {
+    console.log("method makeInteractive called");
+    // targeting the task title DOM element
+    let titleElement = task.querySelector(".task__name");
+    //console.log(titleElement);
+    titleElement.addEventListener('click', eventHandler.handleClickOnTaskTitle);
+    // targeting yellow edit button
+    let editButton = task.querySelector(".task__button--modify");
+    //console.log(editButton);
+    editButton.addEventListener('click',  eventHandler.handleClickOnTaskEditButton);
+    // targeting title edition input
+    let titleEditionInput = task.querySelector('.task__name-edit');
+    titleEditionInput.addEventListener('blur', eventHandler.handleBlurOnTitleInput);
+    titleEditionInput.addEventListener('keyup', eventHandler.handleKeyupOnTitleInput);
+    //targeting finish task button
+    let finishTaskButton = task.querySelector('.task__button--validate');
+    console.log(finishTaskButton);
+    finishTaskButton.addEventListener('click', eventHandler.handleClickOnFinishTaskButton);
+  },
+  displayTasks: function(tasksFromAPI) {
+    console.log('%c' + 'task.displayTasks', 'color: #0bf; font-size: 1rem; background-color:#fff');
+    console.log(tasksFromAPI);
+    // storing tasks loaded from api in the task.tasks property
+    task.tasks = tasksFromAPI;
+    for(let taskObject of task.tasks) {
+      let newTask = task.createNewTaskElement(
+        taskObject.title,
+        taskObject.category.name
+      );
+      
+      // add right completion level to the task element, and select the right status
+      task.decorateTask(newTask, taskObject);
+    }
 
-        // clone the content of the template
-        let newTask = template.content.cloneNode(true);
+    return tasks;
+  },
 
-        // ----- modify the clone with information from the form
-        // https://developer.mozilla.org/en-US/docs/Web/API/HTMLOrForeignElement/dataset
-        let taskElement = newTask.querySelector('.task');
-
-        // data-category
-        taskElement.dataset.category = categoryId;
-
-        // name of the task
-        taskElement.querySelector('.task__name-display').textContent = name;
-
-        // value of the input
-        taskElement.querySelector('.task__name-edit').value = name;
-
-        // get the name of the category from the category id
-        let categoryName = categoryManager.getCategoryName(categoryId);
-
-        // display the category
-        taskElement.querySelector('.task__category p').textContent = categoryName;
-
-        // completion
-        taskElement.querySelector('.progress-bar__level').style.width = completion + '%';
-
-        // CSS class from status
-        if (completion === 100) {
-            taskElement.classList.remove('task--todo');
-            taskElement.classList.add('task--complete');
-        }
-        if (status === 0) {
-            // tâche archivée
-            taskElement.classList.remove('task--todo');
-            taskElement.classList.add('task--archive');
-        }
-
-        // dataset id
-        taskElement.dataset.id = taskId;
-
-        // ----- add the clone to the DOM, before the form
-        // https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore
-        let parentNode = document.querySelector('.tasks');
-        let brother = parentNode.querySelector('.task--add');
-        parentNode.insertBefore(newTask, brother);
-
-        // bind events for the new task
-        app.bindEventsForTask(taskElement);
-    },
-
-    /**
-     * Load all tasks from the API
-     */
-    loadTasks: function() {
-        console.log('load tasks');
-
-        // On prépare la configuration de la requête HTTP
-        let config = {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-cache'
-        };
+  decorateTask: function(taskElement, taskObject) {
+    taskElement.dataset.id = taskObject.id;
+    // task completion handling
+    let progressBar = taskElement.querySelector('.progress-bar__level');
+    progressBar.style.width = taskObject.completion + '%';
+    // task status handling
+    // status == 2 : task completed
+    console.log(taskObject.status);
+    if(taskObject.status == 2) {
+      console.log(taskObject);
+      // removing todo css class
+      taskElement.classList.replace('task--todo', 'task--complete');
+    }
+  },
+  createNewTaskElement: function(title, category) {
+    // targeting the template for new task creation
+    let template = document.querySelector('#new-task');
+    //console.log(template);
+    // create a new copy of the template which will be used for creation of the new task element
+    let newTaskTemplate = template.content.cloneNode(true);
+    // console.log(newTaskTemplate);
+    // targeting thnewTaskElemente div which will be used for task element creation
+    let newTaskElement = newTaskTemplate.querySelector('.task');
     
-        // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch('http://localhost:8080/tasks', config)
-            // Ensuite, lorsqu'on reçoit la réponse au format JSON
-            .then(function(response) {
-                // console.log(response); // réponse entière (headers + contenu)
-                // On convertit cette réponse en un objet JS et on le retourne
-                return response.json();
-            })
-            // Ce résultat au format JS est récupéré en argument ici-même
-            .then(function(data) {
-                // On dispose désormais d'un tableau JS exploitable dans la variable data
-                console.log(data); // contenu de la réponse sous forme d'objet JS
-
-                for (task of data) {
-                    taskManager.addTask(task.title, task.category.id, task.status, task.completion, task.id);
-                }
-            }
-        );
-    },
-}
+    console.log(newTaskElement);
+    // updating the new task element with the correct values
+    let titleInput = newTaskElement.querySelector('.task__name-edit');
+    let titleElement = newTaskElement.querySelector('.task__name-display');
+    let categoryElement = newTaskElement.querySelector('.task__category p');
+    newTaskElement.dataset.category = category;
+    //newTaskElement.dataset.toto = 'truc';
+    titleInput.value = title;
+    titleElement.textContent = title;    
+    categoryElement.textContent = category;
+    // inject the new at the beginning of the task list
+    document.querySelector('.tasks').prepend(newTaskElement);  
+    
+    // making the new task interactive
+    task.makeInteractive(newTaskElement);
+    return newTaskElement;
+  }
+};

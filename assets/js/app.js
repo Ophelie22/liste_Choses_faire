@@ -1,71 +1,55 @@
+// it's important to be sure that the file is loaded ; so a debug is a good option
+//console.log("app.js loaded");
+// app module declaration
 let app = {
-    /**
-     * Initialisation
-     */
-    init: function() {
-        //console.log("init");
+  init: function() {
+    // debug ; init called app.initializeCreateTaskForm();
+    console.log('%cCall : ' + 'Init called', 'color: #0bf');
+    //category module initialization
+    category.init();
+    //loading category list
+    let fetchObject = category.load();
+    /*
+      fetchObject = fetch(endpoint, options) // first step call the api
+        .then(category.handleResponse) // decoding the data
+        .then(category.displaySelectBoxes)
+    */
+    // when the "the "then call queue" will be executed ; we will call task.init  and task.loadTasks
+    fetchObject.then(function() {
+      // loading tasks from the api
+      task.init();
 
-        // mise en place des écouteurs d'événements
-        app.bindEvents();
+      task.load();
 
-        // chargement des catégories
-        categoryManager.loadCategories();
+      //exemple with another then
+      /*
+        return task.load().then(function(tasks) {
+          console.log(tasks);
+        });
+      */
 
-        // découverte LocalStorage : stocker des informations dans le navigateur
-        // https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 
-        // placer une information dans le localStorage (tableau associatif, pour
-        // chaque site)
-        // localStorage.setItem(clé, valeur)
-        localStorage.setItem('filter', 1);
 
-        // consulter une information du localStorage
-        // localStorage.getItem(clé)
-        console.log('valeur de filter dans localStorage : ', localStorage.getItem('filter'));
-    },
 
-    /**
-     * Bind event listeners
-     */
-    bindEvents: function() {
-        // loop on tasks
-        let tasks = document.querySelectorAll(".tasks .task:not(.task--archive):not(.task--add)");
 
-        for (let i = 0; i < tasks.length; i++) {
-            let task = tasks[i];
+    }).then(app.initializeCreateTaskForm);
+  },
 
-            app.bindEventsForTask(task);
-        }
-
-        // listen for submit event on form to add a task
-        let formAddTask = document.querySelector('.task--add form');
-        formAddTask.addEventListener('submit', handler.handleAddTaskFormSubmit);
-    },
-
-    /**
-     * Bind events for a task
-     */
-    bindEventsForTask: function(task) {
-        // event listener for a click on the title
-        let title = task.querySelector('.task__name-display');
-        title.addEventListener('click', handler.handleClickOnTaskTitle);
-
-        // event listener for blur and keydown on the input
-        let input = task.querySelector('.task__name-edit');
-        input.addEventListener('blur', handler.handleTaskTitle);
-        input.addEventListener('keydown', handler.handleTaskTitleEnterKey);
-
-        // event listener for a click on the validate button
-        let validateButton = task.querySelector('.task__button--validate');
-        validateButton.addEventListener('click', handler.handleCompleteButtonClick);
-
-        // event listener for a click on the reset button
-        let resetButton = task.querySelector('.task__button--incomplete');
-        resetButton.addEventListener('click', handler.handleResetButtonClick);
+  initializeCreateTaskForm: function() {
+    // targeting the create form
+    let form = document.querySelector('.task--add form');
+    // console.log(form);
+    let newTaskInput = form.querySelector('.task__name-edit');
+    newTaskInput.addEventListener('keyup', eventHandler.handlekeyUpOnNewTaskTitle)
+    // set the new task input value; with value which is stored in the localStorage
+    // DOC https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+    if(localStorage.getItem('title')) {
+      newTaskInput.value = localStorage.getItem('title');
     }
+    
+    form.addEventListener('submit', eventHandler.handleCreateTaskFormSubmit);
+  },
 };
-
-// si on exécutait tout de suite init, on risquerait que le DOM ne soit pas encore
-// chargé => donc on exécute init au moment de l'événement qui indique que le
-// contenu du DOM est chargé
+// waiting for page load completed ; then all app.init
+// DOC https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event
 document.addEventListener('DOMContentLoaded', app.init);
