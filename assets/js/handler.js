@@ -52,54 +52,12 @@ let handler = {
         let taskToModify = button.closest('.task');
         // get the id because we need it to make a call to the API
         let idTask = taskToModify.dataset.id;
-        
-        // On stocke les données à transférer
-        let data = {
-            completion: 100
-        };
-        
-        // On prépare les entêtes HTTP (headers) de le requête
-        // afin de spécifier que les données sont en JSON
-        let myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        
-        // On consomme l'API pour ajouter en DB
-        let fetchOptions = {
-            method: 'PATCH',
-            mode: 'cors',
-            cache: 'no-cache',
-            // On ajoute les headers dans les options
-            headers: myHeaders,
-            // On ajoute les données, encodée en JSON, dans le corps de la requête
-            body: JSON.stringify(data)
-        };
-        
-        // Exécuter la requête HTTP via XHR
-        fetch('http://localhost:8080/tasks/' + idTask, fetchOptions)
-        .then(
-            function(response) {
-                // console.log(response);
-                // Si HTTP status code à 201 => OK
-                if (response.status == 200) {
-                    // on modifie l'affichage seulement si l'action a réussi
-                    // remove class task--todo and add class task--complete
-                    taskToModify.classList.remove('task--todo');
-                    taskToModify.classList.add('task--complete');
-                    // progress bar to 100%
-                    let progressBar = taskToModify.querySelector('.progress-bar__level');
-                    progressBar.style.width = '100%';
-                }
-                else {
-                    alert('La modification de la tâche a échoué');
-                }
-            }
-        )
+        taskManager.changeTaskCompletion(idTask, 100, taskToModify);
     },
 
     handleResetButtonClick: function(event) {
         console.log('clic sur le bouton reset');
     },
-
     /*
     Objectif : charger les tâches depuis l'API
     - mutualiser le code d'ajout d'une tâche avec le formulaire
@@ -130,7 +88,5 @@ let handler = {
         // clear the form
         event.currentTarget.querySelector('input.task__name-edit').value = '';
         event.currentTarget.querySelector('.task__category select').value = 'Choisir une catégorie';
-    }
-};
     }
 };

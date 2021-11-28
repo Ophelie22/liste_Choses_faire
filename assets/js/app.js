@@ -3,7 +3,7 @@ let app = {
      * Initialisation
      */
     init: function() {
-        console.log("init");
+        //console.log("init");
 
         // mise en place des écouteurs d'événements
         app.bindEvents();
