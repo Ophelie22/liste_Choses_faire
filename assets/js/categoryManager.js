@@ -7,7 +7,7 @@ let categoryManager = {
      * Load all categories from the API
      */
     loadCategories: function() {
-        //console.log('load categories');
+        console.log('load categories');
 
         // On prépare la configuration de la requête HTTP
         let config = {
@@ -17,7 +17,7 @@ let categoryManager = {
         };
     
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch('//http://localhost:8080/categories', config)
+        fetch('http://localhost:8080/categories', config)
             // Ensuite, lorsqu'on reçoit la réponse au format JSON
             .then(function(response) {
                 // console.log(response); // réponse entière (headers + contenu)
